@@ -1,0 +1,20 @@
+{
+  "name": "my5g-rantester-logs-parser",
+  "version": "1.0.0",
+  "description": "Scripts to parse my5G-RANTester metrics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriel-lando/my5G-RANTester-Logs-Parser.git"
+  },
+  "author": "Gabriel Lando",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabriel-lando/my5G-RANTester-Logs-Parser/issues"
+  },
+  "homepage": "https://github.com/gabriel-lando/my5G-RANTester-Logs-Parser#readme"
+}
