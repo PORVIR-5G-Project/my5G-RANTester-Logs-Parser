@@ -42,22 +42,30 @@ instream.on("end", () => {
 
     const tasks = devices[key].tasks;
     Object.keys(tasks).forEach((task) => {
-      if (task == "StartRegistration") return;
+      if (task == "StartRegistration") {
+        device.timestamp = tasks["StartRegistration"];
+        return;
+      }
 
       device.tasks[task] = (tasks[task] - tasks["StartRegistration"]) / (1000.0 * 1000.0); // Convert to ms
       devices_processed[key] = device;
     });
   });
 
+  // Sort data by timestamp
+  const final_data = Object.entries(devices_processed)
+    .sort(([, a], [, b]) => a.timestamp - b.timestamp)
+    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
   // Generate CSV header
-  const task_headers = getTasksNameCsv(devices_processed);
-  const headers = ["id", "type"].concat(task_headers);
+  const task_headers = getTasksNameCsv(final_data);
+  const headers = ["gnbid", "type", "timestamp"].concat(task_headers);
   outstream.write(headers.join(","));
 
   // Generate CSV data per device processed
-  Object.entries(devices_processed).forEach(([key, value]) => {
+  Object.entries(final_data).forEach(([key, value]) => {
     const tasks_str = getTaskValuesCsv(value, task_headers);
-    const line = `${key},${value.type},${tasks_str}`;
+    const line = `${key},${value.type},${value.timestamp},${tasks_str}`;
     outstream.write(`\n${line}`);
   });
 
@@ -66,7 +74,6 @@ instream.on("end", () => {
 });
 
 function getTasksNameCsv(devices) {
-
   // Get all keys
   let keys = [];
   Object.entries(devices).forEach(([key, value]) => {
